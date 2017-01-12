@@ -8,7 +8,8 @@
     "csv-parse": "^1.1.1",
     "elasticsearch": "^11.0.1",
     "http-aws-es": "tphummel/http-aws-es",
-    "lodash": "^4.13.1"
+    "lodash": "^4.13.1",
+    "url-parse": "^1.1.7"
   },
   "devDependencies": {
     "coveralls": "^2.11.9",

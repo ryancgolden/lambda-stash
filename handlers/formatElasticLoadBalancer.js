@@ -1,6 +1,7 @@
 // Modified from lambda-stash/handlers/formatCloudfront.js
 // Requires corresponding parseSpaces.js file
 // author: rgolden@modernize.com
+var parse = require('url-parse');
 
 exports.process = function(config) {
   console.log('formatElasticLoadBalancer');
@@ -34,32 +35,42 @@ exports.process = function(config) {
     row = config.data[i];
     numCols = row.length;
 
-    // In cloudfront logs a fields line is written, but not so in ELB logs
-    // so this first clause should never run, but I'm leaving it in in case ELB
-    // ever changes to the cloudfront technique
-    // I've hard-coded the field names above
-    if (numCols === 1) {
-      row = row[0];
-      var pos = row.indexOf('#Fields: ');
-      if (pos !== -1) {
-        row = row.substr(pos + 9);
-        fields = row.split(" ");
-      }
-    } else if (numCols) {
+    if (numCols) {
       item = {};
       for (j = 0; j < numCols; j++) {
         label = (j < fields.length) ? fields[j] : String(j);
         item[label] = row[j];
-      }
+      };
 
-// I don't think we need this because the ELB field already uses
-// a format like: 2017-01-06T17:10:59.793177Z
-      // if (config.dateField) {
-      //   if (config.dateField === 'date') {
-      //     item.originalDate = item.date;
-      //   }
-      //   item[config.dateField] = item.date + 'T' + item.time;
-      // }
+      // Some fields in the ELB logs are combined, so break them up into separate fields
+      if ('client_port' in item) {
+        var [client_ip, client_port] = item['client_port'].split(':');
+        Object.assign(item, {
+          "c-ip": client_ip,
+          "c-port": client_port
+        });
+      };
+      if ('backend_port' in item) {
+        var [backend_ip, backend_port] = item['backend_port'].split(':');
+        Object.assign(item, {
+          "s-ip": backend_ip,
+          "s-port": backend_port
+        });
+      };
+      if ('request' in item) {
+        // Requests look like: "GET http://lm.hilprod.com:80/lead/formpostlead?TYPE=1&Project=Heating+and+Cooling+Installation&Ip=174.193.150.164&LandingPage=https%3A%2F%2Fmodernize.com%2Fquotes%2Fhvac-heat-pump-installation&Src=Source78&FirstName=Barbara&LastName=Kinard&Email=bkinard7%40ymail.com&Address=2220+hertford+dr&Zip=29210&HomePhone=8037726933&WorkPhone=&CellPhone=&SubId=82153&PubId=&Homeowner=Yes&parm1=Yes&parm2=Yes&Repair=No&HvacSystemType=Heat+Pump&GlassOnly=No&UserSessionId=75002626&LeadId=-8450106&tcpa=Yes&tcpaText=By+submitting+this+request%2C+you+authorize+Modernize+and+up+to+four+home+service+companies+that+can+help+with+your+project+to+call+or+text+you+on+the+phone+number+provided+using+autodialed+and+prerecorded+calls+or+messages.+Your+consent+to+this+agreement+is+not+required+to+purchase+products+or+services.+We+respect+your+privacy.&Mode=full HTTP/1.1"
+        var [method, urlstr, proto_ver] = item['request'].split(' ');
+        var url = parse(urlstr, true);
+
+        Object.assign(item, {
+          method : method,
+          protocol : url.protocol.replace(':', ''),
+          hostname: url.hostname,
+          path: url.pathname,
+          query: url.query,
+          protocol_version: proto_ver
+        });
+      }
 
       output.push(item);
     }
