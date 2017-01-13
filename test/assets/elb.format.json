@@ -52,9 +52,9 @@
     "path": "/lead/ping-margins/",
     "query": {
       "leadId": "591470917",
-      "src": "4+Source",
+      "src": "4 Source",
       "zip": "70769",
-      "project": "Ground+Level+Addition"
+      "project": "Ground Level Addition"
     },
     "protocol_version": "HTTP/1.0"
   }

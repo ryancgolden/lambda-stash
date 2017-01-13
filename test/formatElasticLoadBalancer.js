@@ -26,11 +26,14 @@ describe('handler/formatElasticLoadBalancer.js', function() {
         };
         handler.process(config)
           .then(function(result) {
-            console.log("result.data is: " + JSON.stringify(result.data, null, 4));
+            console.log("result.data is: " +
+                JSON.stringify(result.data, null, 4));
             assert.ok(result.hasOwnProperty('setting'),
                'process returns config object');
-            assert.deepStrictEqual(result.data, dataJson,
-               'Elastic Load Balancer data formatted successfully');
+            assert.deepEqual(result.data[1], dataJson[1],
+               'Elastic Load Balancer second row data formatted successfully');
+            assert.deepEqual(result.data[0], dataJson[0],
+               'Elastic Load Balancer first row data formatted successfully');
             done();
           });
       });

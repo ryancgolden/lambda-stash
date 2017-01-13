@@ -1,8 +1,7 @@
 // Modified from lambda-stash/handlers/formatCloudfront.js
 // Requires corresponding parseSpaces.js file
 // author: rgolden@modernize.com
-'use strict';
-var parse = require('url-parse');
+var url = require('url');
 
 exports.process = function(config) {
   console.log('formatElasticLoadBalancer');
@@ -44,41 +43,45 @@ exports.process = function(config) {
       }
 
       // Some fields in the ELB logs are combined, so break them up into separate fields
-      if ('client_port' in item) {
-        var [clientIp, clientPort] = item.client_port.split(':');
+      if (item.hasOwnProperty('client_port')) {
+        var clientPortArr = item.client_port.split(':');
+        var clientIp = clientPortArr[0];
+        var clientPort = clientPortArr[1];
         Object.assign(item, {
           "c-ip": clientIp,
           "c-port": clientPort
         });
       }
 
-      if ('backend_port' in item) {
-        var [backendIp, backendPort] = item.backend_port.split(':');
+      if (item.hasOwnProperty('backend_port')) {
+        var backendPortArr = item.backend_port.split(':');
+        var backendIp = backendPortArr[0];
+        var backendPort = backendPortArr[1];
+
         Object.assign(item, {
           "s-ip": backendIp,
           "s-port": backendPort
         });
       }
 
-      if ('request' in item) {
+      if (item.hasOwnProperty('request')) {
         // See test folder for example of what request rows look like
-        var request;
         var method;
         var urlstr;
         var protoVer;
-        var url;
-        request = item.request.split(' ');
-        method = request[0];
-        urlstr = request[1];
-        protoVer = request[2];
-        url = parse(urlstr, true);
+        var myUrl;
+        var requestArr = item.request.split(' ');
+        method = requestArr[0];
+        urlstr = requestArr[1];
+        protoVer = requestArr[2];
+        myUrl = url.parse(urlstr, true);
 
         Object.assign(item, {
           method: method,
-          protocol: url.protocol.replace(':', ''),
-          hostname: url.hostname,
-          path: url.pathname,
-          query: url.query,
+          protocol: myUrl.protocol.replace(':', ''),
+          hostname: myUrl.hostname,
+          path: myUrl.pathname,
+          query: myUrl.query,
           protocol_version: protoVer
         });
       }
