@@ -59,8 +59,12 @@ exports.process = function(config) {
       };
       if ('request' in item) {
         // Requests look like: "GET http://lm.hilprod.com:80/lead/formpostlead?TYPE=1&Project=Heating+and+Cooling+Installation&Ip=174.193.150.164&LandingPage=https%3A%2F%2Fmodernize.com%2Fquotes%2Fhvac-heat-pump-installation&Src=Source78&FirstName=Barbara&LastName=Kinard&Email=bkinard7%40ymail.com&Address=2220+hertford+dr&Zip=29210&HomePhone=8037726933&WorkPhone=&CellPhone=&SubId=82153&PubId=&Homeowner=Yes&parm1=Yes&parm2=Yes&Repair=No&HvacSystemType=Heat+Pump&GlassOnly=No&UserSessionId=75002626&LeadId=-8450106&tcpa=Yes&tcpaText=By+submitting+this+request%2C+you+authorize+Modernize+and+up+to+four+home+service+companies+that+can+help+with+your+project+to+call+or+text+you+on+the+phone+number+provided+using+autodialed+and+prerecorded+calls+or+messages.+Your+consent+to+this+agreement+is+not+required+to+purchase+products+or+services.+We+respect+your+privacy.&Mode=full HTTP/1.1"
-        var [method, urlstr, proto_ver] = item['request'].split(' ');
-        var url = parse(urlstr, true);
+         var request, method, urlstr, proto_ver, url; 
+         request = item['request'].split(' ');
+         method = request[0];
+         urlstr = request[1];
+         proto_ver = request[2];
+         url = parse(urlstr, true);
 
         Object.assign(item, {
           method : method,
