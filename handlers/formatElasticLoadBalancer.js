@@ -44,9 +44,11 @@ exports.process = function(config) {
 
       // Some fields in the ELB logs are combined, so break them up into separate fields
       if (item.hasOwnProperty('client_port')) {
+        // This strips the port off of both IPv4 and IPv6 IPs
         var clientPortArr = item.client_port.split(':');
-        var clientIp = clientPortArr[0];
-        var clientPort = clientPortArr[1];
+        var clientIp = clientPortArr.slice(0, (clientPortArr.length - 1))
+            .join(':');
+        var clientPort = clientPortArr[clientPortArr.length - 1];
         Object.assign(item, {
           "c-ip": clientIp,
           "c-port": clientPort
@@ -55,8 +57,9 @@ exports.process = function(config) {
 
       if (item.hasOwnProperty('backend_port')) {
         var backendPortArr = item.backend_port.split(':');
-        var backendIp = backendPortArr[0];
-        var backendPort = backendPortArr[1];
+        var backendIp = backendPortArr.slice(0, (backendPortArr.length - 1))
+            .join(':');
+        var backendPort = backendPortArr[backendPortArr.length - 1];
 
         Object.assign(item, {
           "s-ip": backendIp,
