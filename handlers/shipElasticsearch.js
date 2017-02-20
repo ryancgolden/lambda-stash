@@ -33,8 +33,12 @@ exports.process = function(config) {
     return new Promise(function(resolve, reject) {
       es.bulk({body: docs}, function(err, result) {
         if (err) {
+          console.log('Error attempting to bulk insert the following body:' +
+            JSON.stringify(docs));
           return reject(err);
         } else if (result.errors) {
+          console.log('Error attempting to bulk insert the following body:' +
+            JSON.stringify(docs));
           return reject(result);
         }
         resolve();
