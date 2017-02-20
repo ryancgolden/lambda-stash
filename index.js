@@ -74,7 +74,8 @@ exports.handler = function(config, event, context, callback) {
       callback(null, 'Successfully shipped data!');
     })
     .catch(function(err) {
-      console.log('Error occurred while preparing to ship data:', err);
+      console.log('Error occurred while preparing to ship data:');
+      console.log(JSON.stringify(err));
       context.fail('Error occurred while preparing to ship data');
     });
 };
