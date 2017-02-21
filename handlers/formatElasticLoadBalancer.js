@@ -49,6 +49,10 @@ exports.process = function(config) {
         var clientIp = clientPortArr.slice(0, (clientPortArr.length - 1))
             .join(':');
         var clientPort = clientPortArr[clientPortArr.length - 1];
+
+        // ElasticSearch 5 won't accept empty string for IP data type
+        clientIp = (clientIp) ? clientIp : '0.0.0.0';
+
         Object.assign(item, {
           "c-ip": clientIp,
           "c-port": clientPort
@@ -60,6 +64,9 @@ exports.process = function(config) {
         var backendIp = backendPortArr.slice(0, (backendPortArr.length - 1))
             .join(':');
         var backendPort = backendPortArr[backendPortArr.length - 1];
+
+        // ElasticSearch 5 won't accept empty string for IP data type
+        backendIp = (backendIp) ? backendIp : '0.0.0.0';
 
         Object.assign(item, {
           "s-ip": backendIp,
@@ -75,9 +82,13 @@ exports.process = function(config) {
         var myUrl;
         var requestArr = item.request.split(' ');
         method = requestArr[0];
-        urlstr = requestArr[1];
+        urlstr = requestArr[1].trim();
         protoVer = requestArr[2];
         myUrl = url.parse(urlstr, true);
+
+        // For some reason url.parse sometimes returns a query object
+        // with an empty string property, which ElasticSearch doesn't like
+        delete myUrl.query[''];
 
         Object.assign(item, {
           method: method,
