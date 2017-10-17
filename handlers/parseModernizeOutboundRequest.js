@@ -16,17 +16,33 @@ exports.process = function(config) {
       if (element.hasOwnProperty('requestBody')) {
         try {
           let bodyJson = JSON.parse(element.requestBody);
-          newElem = Object.assign(newElem, {requestBodyJson: bodyJson});
+          newElem = Object.assign(newElem, {requestBody: bodyJson});
           console.log('Found and converted JSON request body');
-        } catch (err) { /* don't add property if not valid JSON */ }
+        } catch (err) {
+          // If not JSON, then encapsulate it in an object
+          newElem = Object.assign(newElem, {
+            requestBody: {
+              body: element.requestBody
+            }
+          });
+          console.log('Found and converted string request body');
+        }
       }
 
       if (element.hasOwnProperty('responseBody')) {
         try {
           let bodyJson = JSON.parse(element.responseBody);
-          newElem = Object.assign(newElem, {responseBodyJson: bodyJson});
+          newElem = Object.assign(newElem, {responseBody: bodyJson});
           console.log('Found and converted JSON response body');
-        } catch (err) { /* don't add property if not valid JSON */ }
+        } catch (err) {
+          // If not JSON, then encapsulate it in an object
+          newElem = Object.assign(newElem, {
+            responseBody: {
+              body: element.responseBody
+            }
+          });
+          console.log('Found and converted string response body');
+        }
       }
 
       return newElem;
