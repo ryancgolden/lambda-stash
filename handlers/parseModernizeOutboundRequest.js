@@ -1,17 +1,8 @@
 'use strict';
 
-var ParseException = message => {
-  this.message = message;
-  this.name = 'UserException';
-};
-
 exports.process = function(config) {
   console.log('parseModernizeOutboundRequest');
   try {
-    if (!config.data.isArray()) {
-      throw new ParseException('Data not in expected array form');
-    }
-
     config.data.map(function(element) {
       var newElem = element;
 
