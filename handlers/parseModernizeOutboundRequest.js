@@ -1,3 +1,5 @@
+'use strict';
+
 var ParseException = message => {
   this.message = message;
   this.name = 'UserException';
