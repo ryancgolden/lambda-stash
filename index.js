@@ -12,8 +12,7 @@ exports.handler = function(config, event, context, callback) {
     };
     eventType = 'S3';
     taskNames.push('getS3Object');
-    console.log('Handling event for s3://' + config.S3.srcBucket + '/' +
-      config.S3.srcKey);
+    // console.log('Handling event for s3://' + config.S3.srcBucket + '/' + config.S3.srcKey);
   } else if (event.hasOwnProperty('awslogs') &&
       event.awslogs.hasOwnProperty('data')) {
     config.data = event.awslogs.data;
@@ -21,7 +20,7 @@ exports.handler = function(config, event, context, callback) {
     taskNames.push('decodeBase64');
     taskNames.push('decompressGzip');
     taskNames.push('parseJson');
-    console.log('Handling event for CloudWatch logs');
+    // console.log('Handling event for CloudWatch logs');
   }
 
   var currentMapping;
@@ -30,7 +29,7 @@ exports.handler = function(config, event, context, callback) {
       if (item.type === eventType ||
           (config.S3 && item.bucket === config.S3.srcBucket)) {
         currentMapping = item;
-        console.log('Selected mapping for S3 event:', item);
+        // console.log('Selected mapping for ' + eventType + ' event:', item);
         if (item.hasOwnProperty('processors')) {
           taskNames = taskNames.concat(item.processors);
         }
@@ -42,11 +41,11 @@ exports.handler = function(config, event, context, callback) {
   }
 
   if (!currentMapping) {
-    console.log('Event did not match any mappings.');
+    // console.log('Event did not match any mappings.');
     return callback(null, 'Event did not match any mappings.');
   }
 
-  console.log('Running ' + taskNames.length + ' handlers with config:', config);
+  // console.log('Running ' + taskNames.length + ' handlers with config:', config);
   var tasks = [];
   var processor;
   _.some(taskNames, function(taskName) {
@@ -66,11 +65,11 @@ exports.handler = function(config, event, context, callback) {
     }
   });
 
-  console.log('Starting to run processor tasks...');
+  // console.log('Starting to run processor tasks...');
 
   Promise.series(tasks, config)
     .then(function(/* config */) {
-      console.log('Successfully shipped data!');
+      // console.log('Successfully shipped data!');
       callback(null, 'Successfully shipped data!');
     })
     .catch(function(err) {

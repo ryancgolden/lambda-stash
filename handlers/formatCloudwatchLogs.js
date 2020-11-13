@@ -1,13 +1,14 @@
 var _ = require('lodash');
 
 exports.process = function(config) {
-  console.log('formatCloudwatchLogs');
+  // console.log('formatCloudwatchLogs');
   if (!config.data ||
       !config.data.hasOwnProperty('logEvents') ||
       _.isNil(config.data.logEvents.length)) {
     return Promise.reject('Received unexpected AWS Cloudwatch Logs format:' +
       JSON.stringify(config.data));
   }
+  // console.log('rgolden debugging. input to formatCloudWatchLogs:', JSON.stringify(config.data));
 
   var items = [];
   var num = config.data.logEvents.length;
@@ -56,5 +57,8 @@ exports.process = function(config) {
     items.push(item);
   }
   config.data = items;
+
+  // console.log('rgolden debugging. output from formatCloudWatchLogs:', JSON.stringify(config.data));
+
   return Promise.resolve(config);
 };

@@ -1,7 +1,7 @@
 var _ = require('lodash');
 
 exports.process = function(config) {
-  console.log('shipElasticsearch');
+  // console.log('shipElasticsearch');
 
   var esConfig = {
     host: config.elasticsearch.host
@@ -28,17 +28,14 @@ exports.process = function(config) {
   var promises = [];
 
   var ship = function(docs) {
-    console.log('Preparing to ship ' + (docs.length / 2) +
-      ' records to Elasticsearch.');
+    // console.log('Preparing to ship ' + (docs.length / 2) + ' records to Elasticsearch.');
     return new Promise(function(resolve, reject) {
       es.bulk({body: docs}, function(err, result) {
         if (err) {
-          console.log('Error attempting to bulk insert the following body:' +
-            JSON.stringify(docs));
+          // console.log('Error attempting to bulk insert the following body:' + JSON.stringify(docs));
           return reject(err);
         } else if (result.errors) {
-          console.log('Error attempting to bulk insert the following body:' +
-            JSON.stringify(docs));
+          // console.log('Error attempting to bulk insert the following body:' + JSON.stringify(docs));
           return reject(result);
         }
         resolve();

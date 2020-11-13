@@ -4,7 +4,7 @@
 var url = require('url');
 
 exports.process = function(config) {
-  console.log('formatElasticLoadBalancer');
+  // console.log('formatElasticLoadBalancer');
   var output = [];
   var fields = [
     "timestamp",

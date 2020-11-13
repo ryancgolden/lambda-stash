@@ -1,7 +1,7 @@
 var _ = require('lodash');
 
 exports.process = function(config) {
-  console.log('convertString');
+  // console.log('convertString');
   if (!_.isArray(config.data)) {
     return Promise.reject('Non-array data passed to convertString.');
   }

@@ -1,5 +1,5 @@
 exports.process = function(config) {
-  console.log('shipTcp');
+  // console.log('shipTcp');
   var finished = false;
   return new Promise(function(resolve, reject) {
     var net = require('net');
