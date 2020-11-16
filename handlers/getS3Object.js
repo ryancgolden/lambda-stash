@@ -1,5 +1,5 @@
 exports.process = function(config) {
-  console.log('getS3Object');
+  // console.log('getS3Object');
   return new Promise(function(resolve, reject) {
     var AWS = require('aws-sdk');
     var s3 = new AWS.S3();

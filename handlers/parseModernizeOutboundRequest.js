@@ -1,7 +1,7 @@
 'use strict';
 
 exports.process = function(config) {
-  console.log('parseModernizeOutboundRequest');
+  // console.log('parseModernizeOutboundRequest');
   try {
     config.data.map(function(element) {
       var newElem = element;
@@ -10,7 +10,7 @@ exports.process = function(config) {
         try {
           let bodyJson = JSON.parse(element.requestBody);
           newElem = Object.assign(newElem, {requestBody: bodyJson});
-          console.log('Found and converted JSON request body');
+          // console.log('Found and converted JSON request body');
         } catch (err) {
           // If not JSON, then encapsulate it in an object
           newElem = Object.assign(newElem, {
@@ -18,7 +18,7 @@ exports.process = function(config) {
               body: element.requestBody
             }
           });
-          console.log('Found and converted string request body');
+          // console.log('Found and converted string request body');
         }
       }
 
@@ -26,7 +26,7 @@ exports.process = function(config) {
         try {
           let bodyJson = JSON.parse(element.responseBody);
           newElem = Object.assign(newElem, {responseBody: bodyJson});
-          console.log('Found and converted JSON response body');
+          // console.log('Found and converted JSON response body');
         } catch (err) {
           // If not JSON, then encapsulate it in an object
           newElem = Object.assign(newElem, {
@@ -34,7 +34,7 @@ exports.process = function(config) {
               body: element.responseBody
             }
           });
-          console.log('Found and converted string response body');
+          // console.log('Found and converted string response body');
         }
       }
 

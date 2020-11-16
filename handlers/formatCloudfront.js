@@ -1,5 +1,5 @@
 exports.process = function(config) {
-  console.log('formatCloudfront');
+  // console.log('formatCloudfront');
   var output = [];
   var fields = [];
   var numRows = config.data.length;

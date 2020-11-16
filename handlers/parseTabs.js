@@ -1,7 +1,7 @@
 var parse = require('csv-parse');
 
 exports.process = function(config) {
-  console.log('parseTabs');
+  // console.log('parseTabs');
   return new Promise(function(resolve, reject) {
     parse(config.data, {
       delimiter: '\t',
